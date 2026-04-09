@@ -58,7 +58,7 @@ function clean() {
 
 function watchFiles() {
   gulp.watch(['src/**/*.html'], html);
-  gulp.watch(['src/blocks/**/*.css'], css);
+  gulp.watch(['src/styles/**/*.css'], css);
   gulp.watch(['src/images/**/*.{jpg,png,svg,gif,ico,webp,avif}'], images);
 }
 
@@ -70,7 +70,14 @@ function serve() {
   });
 }
 
-const build = gulp.series(clean, gulp.parallel(html, css, images));
+function fonts() {
+  return gulp
+    .src('src/fonts/**/*')
+    .pipe(gulp.dest('dist/fonts'))
+    .pipe(browserSync.reload({ stream: true }));
+}
+
+const build = gulp.series(clean, gulp.parallel(html, css, images, fonts));
 const watchapp = gulp.parallel(build, watchFiles, serve);
 
 exports.html = html;
